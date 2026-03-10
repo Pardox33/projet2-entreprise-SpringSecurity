@@ -1,71 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"> 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"> 
 
 <head>
-<meta charset="utf-8">
-<title>Liste des Entreprises</title>
+    <meta charset="utf-8">
+    <title>Liste des Entreprises</title>
 
-<link rel="stylesheet"
-      th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+    <link rel="stylesheet"
+          th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
 </head>
 
 <body>
 <div th:replace="template"></div>
+
 <div class="container mt-5">
-<div class="card">
+    <div class="card">
 
-  <div class="card-header">
-    <h1 align="center">Liste des Entreprises</h1>
-  </div>
+        <div class="card-header">
+            <h1 align="center">Liste des Entreprises</h1>
+        </div>
 
-  <div class="card-body">
+        <div class="card-body">
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Chiffre d'Affaires</th>
-            <th>Date Création</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+            
 
-        <tbody>
-           <tr th:each="e:${entreprises.content}">
-              <td th:text="${e.idEnt}"></td>
-              <td th:text="${e.nomEnt}"></td>
-              <td th:text="${e.chiffreAff}"></td>
-              <td th:text="${#dates.format(e.dateCre, 'yyyy-MM-dd')}"></td>
-              <td th:text="${e.email}"></td>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Chiffre d'Affaires</th>
+                        <th>Date Création</th>
+						<th>Secteur</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-              <td>
-                <a th:href="@{/supprimerEntreprise(id=${e.idEnt},page=${currentPage},size=${size})}"
-                   class="btn btn-danger btn-sm" 
-				   onclick="return confirm('Etes-vous sûr ?')">Supprimer</a>
-              </td>
-           </tr>
-        </tbody>
-      </table>
-	  <ul class="nav nav-pills">
-	    <li class="nav-item" th:each="i, stat : ${pages}">
-	      <a th:href="@{/listeEntreprises(page=${stat.index}, size=${size})}"
-	         th:text="${stat.index + 1}"
-<<<<<<< HEAD
-	         th:classappend="${stat.index == currentPage+1} ? ' btn btn-primary' : ' btn btn-light'" 
-=======
-	         th:classappend="${stat.index == currentPage} ? ' btn btn-primary' : ' btn btn-light'" 
->>>>>>> 808a62b35576986f7545f437f3853d912ac4ca5e
-	         class="btn m-1">
-	      </a>
-	    </li>
-	  </ul>
+                <tbody>
+                   <tr th:each="e:${entreprises.content}">
+                      <td th:text="${e.idEnt}"></td>
+                      <td th:text="${e.nomEnt}"></td>
+                      <td th:text="${e.chiffreAff}"></td>
+                      <td th:text="${#dates.format(e.dateCre, 'yyyy-MM-dd')}"></td>
+					  <td th:text="${e.secteur != null} ? ${e.secteur.nomSec} : '-'"></td>
+                      <td th:text="${e.email}"></td>
+                      <td>
+                        <a th:href="@{/modifierEntreprise(id=${e.idEnt}, page=${currentPage}, size=${size})}" 
+                           class="btn btn-success btn-sm">Modifier</a>
+                        <a th:href="@{/supprimerEntreprise(id=${e.idEnt}, page=${currentPage}, size=${size})}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Etes-vous sûr ?')">Supprimer</a>
+                      </td>
+                   </tr>
+                </tbody>
+            </table>
+			
+			
 
-  </div>
+            <ul class="nav nav-pills">
+                <li class="nav-item" th:each="i, stat : ${pages}">
+                    <a th:href="@{/listeEntreprises(page=${stat.index}, size=${size})}"
+                       th:text="${stat.index + 1}"
+                       th:class="${stat.index == currentPage} ? 'btn btn-primary' : 'btn btn-light'">
+                    </a>
+                </li>
+            </ul>
 
-</div>
+        </div>
+		
+		<div class="mb-3">
+			<a th:href="@{/showCreate(page=${currentPage}, size=${size})}" class="btn btn-primary mb-3 ml-3">
+			Ajouter Entreprise</a>
+		</div>
+
+    </div>
 </div>
 
 </body>

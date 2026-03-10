@@ -2,14 +2,8 @@ package com.nadia.entreprises;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.nadia.entreprises.entities.Entreprise;
 import com.nadia.entreprises.service.EntrepriseService;
 
 @SpringBootApplication

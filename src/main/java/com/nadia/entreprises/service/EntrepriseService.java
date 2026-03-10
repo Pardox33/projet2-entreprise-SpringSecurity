@@ -22,4 +22,6 @@ public interface EntrepriseService {
 	List<Entreprise> findBySecteurIdSec(Long id); 
 	List<Entreprise> findByOrderByNomEntAsc(); 
 	List<Entreprise> trierEntreprisesNomsChiffre();
+	
+	List<Secteur> getAllSecteur();
 }

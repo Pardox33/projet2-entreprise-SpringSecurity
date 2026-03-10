@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+<head>
+	<meta charset="utf-8">
+	<title>Entreprise</title>
+</head>
+
+<body>
+	<div th:replace="template"></div>
+	<div class="container mt-5">
+		<div class="card">
+			<div class="card-header" th:text="${entreprise.idEnt == null} ? 'Add Entreprise' : 'Modify Entreprise'">
+			</div>
+			<div class="card-body">
+				<form th:action="@{saveOrUpdateEntreprise}" th:object="${entreprise}" method="post">
+					<input type="hidden" th:field="*{idEnt}" />
+					<input type="hidden" name="page" th:value="${currentPage}" />
+					<input type="hidden" name="size" th:value="${size}" />
+
+					<div class="form-group">
+						<label class="control-label">Nom de l'entreprise :</label>
+						<input type="text" th:field="*{nomEnt}" class="form-control" />
+						<span th:if="${#fields.hasErrors('nomEnt')}" th:errors="*{nomEnt}" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Chiffre d'affaires :</label>
+						<input type="number" step="0.01" th:field="*{chiffreAff}" class="form-control" />
+						<span th:if="${#fields.hasErrors('chiffreAff')}" th:errors="*{chiffreAff}"
+							class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Date de création :</label>
+						<input type="date" th:field="*{dateCre}" class="form-control" />
+						<span th:if="${#fields.hasErrors('dateCre')}" th:errors="*{dateCre}" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Email :</label>
+						<input type="email" th:field="*{email}" class="form-control" />
+						<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Secteur : </label>
+
+						<!-- Si modification et secteur non null -->
+						<select name="secteur" class="form-control"
+							th:if="${entreprise.idEnt != null and entreprise.secteur != null}">
+							<option th:each="s : ${secteurs}" th:value="${s.idSec}" th:text="${s.nomSec}"
+								th:selected="${s.idSec == entreprise.secteur.idSec}">
+							</option>
+						</select>
+
+						<!-- Si ajout ou secteur null -->
+						<select name="secteur" class="form-control"
+							th:if="${entreprise.idEnt == null or entreprise.secteur == null}">
+							<option value="">-- Choisir un secteur --</option>
+							<option th:each="s : ${secteurs}" th:value="${s.idSec}" th:text="${s.nomSec}">
+							</option>
+						</select>
+					</div>
+
+					<div>
+						<button type="submit" class="btn btn-primary"
+							th:text="${entreprise.idEnt == null} ? 'Ajouter' : 'Modifier'">
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

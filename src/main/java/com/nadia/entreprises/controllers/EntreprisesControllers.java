@@ -9,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nadia.entreprises.entities.Entreprise;
+import com.nadia.entreprises.entities.Secteur;
 import com.nadia.entreprises.service.EntrepriseService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class EntreprisesControllers {
@@ -22,88 +26,80 @@ public class EntreprisesControllers {
     @Autowired
     EntrepriseService entrepriseService;
 
-    
     @RequestMapping("/listeEntreprises")
     public String listeEntreprises(ModelMap modelMap,
-    		@RequestParam (name="page",defaultValue="0")int page,
-    		@RequestParam (name="size",defaultValue="3") int size) {
-    	Page<Entreprise> ents = entrepriseService.getAllEntreprisesParPage(page, size);
+                                   @RequestParam(name="page", defaultValue="0") int page,
+                                   @RequestParam(name="size", defaultValue="2") int size) {
 
-    	modelMap.addAttribute("entreprises", ents);
-    	modelMap.addAttribute("pages", new int[ents.getTotalPages()]);
-    	modelMap.addAttribute("currentPage", page-1);
-
-    	return "listeEntreprises";
+        Page<Entreprise> ents = entrepriseService.getAllEntreprisesParPage(page, size);
+        modelMap.addAttribute("entreprises", ents);
+        modelMap.addAttribute("pages", new int[ents.getTotalPages()]);
+        modelMap.addAttribute("currentPage", page);
+        modelMap.addAttribute("size", size);
+        return "listeEntreprises";
     }
 
-    
     @RequestMapping("/showCreate")
-    public String showCreate() {
-        return "createEntreprise";
+    public String showCreate(ModelMap modelMap) {
+        modelMap.addAttribute("entreprise", new Entreprise());
+        modelMap.addAttribute("secteurs", entrepriseService.getAllSecteur());
+        return "createEntreprises";
     }
-
     
+
     @RequestMapping("/saveEntreprise")
-    public String saveEntreprise(@ModelAttribute("entreprise") Entreprise entreprise,
-                                 @RequestParam("date") String date,
-                                 ModelMap modelMap) throws ParseException {
-
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateCreation = dateformat.parse(date);
-        entreprise.setDateCre(dateCreation);
-
-        Entreprise saved = entrepriseService.saveEntreprise(entreprise);
-
-        String msg = "Entreprise enregistrée avec Id " + saved.getIdEnt();
-        modelMap.addAttribute("msg", msg);
-
-        return "createEntreprise";
+    public String saveEntreprise(@Valid @ModelAttribute("entreprise") Entreprise entreprise,
+                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "createEntreprises";
+        entrepriseService.saveEntreprise(entreprise);
+        return "redirect:/listeEntreprises";
     }
 
-   
     @RequestMapping("/supprimerEntreprise")
     public String supprimerEntreprise(@RequestParam("id") Long id,
-                                      ModelMap modelMap,
-                                      @RequestParam (name="page",defaultValue = "0") int page, 
-                                      @RequestParam (name="size", defaultValue = "2") int size)  {
+                                      @RequestParam(name="page", defaultValue="0") int page,
+                                      @RequestParam(name="size", defaultValue="2") int size) {
 
         entrepriseService.deleteEntrepriseById(id);
         Page<Entreprise> ents = entrepriseService.getAllEntreprisesParPage(page, size);
-
-        modelMap.addAttribute("entreprises", ents);           
-        modelMap.addAttribute("pages", new int[ents.getTotalPages()]);     
-        modelMap.addAttribute("currentPage", page);                        
-        modelMap.addAttribute("size", size);                               
-
-        return "listeEntreprises";
+        if (page >= ents.getTotalPages() && page > 0) {
+            page--;
+        }
+        return "redirect:/listeEntreprises?page=" + page + "&size=" + size;
     }
 
-   
     @RequestMapping("/modifierEntreprise")
     public String editerEntreprise(@RequestParam("id") Long id,
+                                   @RequestParam(name="page", defaultValue="0") int page,
+                                   @RequestParam(name="size", defaultValue="2") int size,
                                    ModelMap modelMap) {
-
-        Entreprise e = entrepriseService.getEntreprise(id);
-        modelMap.addAttribute("entreprise", e);
-
-        return "editerEntreprise";
+        modelMap.addAttribute("entreprise", entrepriseService.getEntreprise(id));
+        modelMap.addAttribute("secteurs", entrepriseService.getAllSecteur());
+        modelMap.addAttribute("currentPage", page);
+        modelMap.addAttribute("size", size);
+        return "createEntreprises";
     }
-
     
-    @RequestMapping("/updateEntreprise")
-    public String updateEntreprise(@ModelAttribute("entreprise") Entreprise entreprise,
-                                   @RequestParam("date") String date,
-                                   ModelMap modelMap) throws ParseException {
+    
 
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateCreation = dateformat.parse(date);
-        entreprise.setDateCre(dateCreation);
+    @RequestMapping("/saveOrUpdateEntreprise")
+    public String saveOrUpdateEntreprise(@Valid @ModelAttribute("entreprise") Entreprise entreprise,
+                                         BindingResult bindingResult,
+                                         @RequestParam(name="page", defaultValue="0") int page,
+                                         @RequestParam(name="size", defaultValue="2") int size,
+                                         ModelMap modelMap) {
 
-        entrepriseService.updateEntreprise(entreprise);
+        if (bindingResult.hasErrors()) {
+            modelMap.addAttribute("secteurs", entrepriseService.getAllSecteur());
+            return "createEntreprises";
+        }
 
-        List<Entreprise> ents = entrepriseService.getAllEntreprises();
-        modelMap.addAttribute("entreprises", ents);
+        if (entreprise.getIdEnt() == null) {
+            entrepriseService.saveEntreprise(entreprise);
+        } else {
+            entrepriseService.updateEntreprise(entreprise);
+        }
 
-        return "listeEntreprises";
+        return "redirect:/listeEntreprises?page=" + page + "&size=" + size;
     }
 }

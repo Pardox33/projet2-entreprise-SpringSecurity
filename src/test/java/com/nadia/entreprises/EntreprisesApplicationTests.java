@@ -22,25 +22,24 @@ class EntreprisesApplicationTests {
 	
 	@Test
 	public void testCreateEntreprise(){
-	Entreprise ent=new Entreprise("Riot",850.0,new Date(),"riot@gmail.com");
-	ent.setSecteur(null);
-	entrepriseRepository.save(ent);
+		Entreprise ent=new Entreprise("Riot",850.0,new Date(),"riot@gmail.com");
+		ent.setSecteur(null);
+		entrepriseRepository.save(ent);
 	}
-	
 	@Test
 	public void testFindEntreprise() {
-		Entreprise e=entrepriseRepository.findById(1L).get();
+		Entreprise e=entrepriseRepository.findById(6L).get();
 		System.out.println(e);
 	}
 	
 	@Test
 	public void testUpdateEntreprise() {
-		Entreprise e=entrepriseRepository.findById(1L).get();
-		e.setChiffreAff(600.0);
-		System.out.println("ID before save: " + e.getIdEnt());
+		Entreprise e=entrepriseRepository.findById(6L).get();
+		e.setChiffreAff(988.0);
 		entrepriseRepository.save(e);
 		System.out.println(e);
 	}
+	
 	
 	@Test
 	public void testDeleteEntreprise() {
@@ -103,7 +102,7 @@ class EntreprisesApplicationTests {
 	@Test 
 	public void testfindBySecteur() { 
 		Secteur sec = new Secteur(); 
-		sec.setIdSec(4L);    
+		sec.setIdSec(2L);    
 		System.out.println("SECTEUR ENTREPRISES: "); 
 		List<Entreprise>  ents = entrepriseRepository.findBySecteur(sec); 
 		for (Entreprise e : ents) 

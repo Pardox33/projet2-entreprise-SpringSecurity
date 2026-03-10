@@ -10,11 +10,15 @@ import org.springframework.stereotype.Service;
 import com.nadia.entreprises.entities.Entreprise;
 import com.nadia.entreprises.entities.Secteur;
 import com.nadia.entreprises.repos.EntrepriseRepository;
+import com.nadia.entreprises.repos.SecteurRepository;
 
 @Service
 public class EntrepriseServiceImp implements EntrepriseService{
 	@Autowired
 	EntrepriseRepository entrepriseRepository;
+	
+	@Autowired
+	SecteurRepository secteurRepository;
 	
 	@Override
 	public Entreprise saveEntreprise(Entreprise e) {
@@ -84,6 +88,11 @@ public class EntrepriseServiceImp implements EntrepriseService{
 	@Override
 	public List<Entreprise> trierEntreprisesNomsChiffre() {
 		return entrepriseRepository.trierEntreprisesNomsChiffre();
+	}
+
+	@Override
+	public List<Secteur> getAllSecteur() {
+		return secteurRepository.findAll() ;
 	}
 
 }
