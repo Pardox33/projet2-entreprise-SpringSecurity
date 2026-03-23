@@ -11,7 +11,7 @@
 	<div th:replace="template"></div>
 	<div class="container mt-5">
 		<div class="card">
-			<div class="card-header" th:text="${entreprise.idEnt == null} ? 'Add Entreprise' : 'Modify Entreprise'">
+			<div class="card-header" th:text="${entreprise.idEnt == null} ? 'Ajouter Entreprise' : 'Modifier Entreprise'">
 			</div>
 			<div class="card-body">
 				<form th:action="@{saveOrUpdateEntreprise}" th:object="${entreprise}" method="post">

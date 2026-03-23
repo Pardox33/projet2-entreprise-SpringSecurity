@@ -33,7 +33,7 @@
                         <th>Date Création</th>
 						<th>Secteur</th>
                         <th>Email</th>
-                        <th>Actions</th>
+                        <th sec:authorize="hasAuthority('ADMIN')">Actions</th>
                     </tr>
                 </thead>
 
@@ -45,7 +45,7 @@
                       <td th:text="${#dates.format(e.dateCre, 'yyyy-MM-dd')}"></td>
 					  <td th:text="${e.secteur != null} ? ${e.secteur.nomSec} : '-'"></td>
                       <td th:text="${e.email}"></td>
-                      <td>
+                     <td sec:authorize="hasAuthority('ADMIN')" >
                         <a th:href="@{/modifierEntreprise(id=${e.idEnt}, page=${currentPage}, size=${size})}" 
                            class="btn btn-success btn-sm">Modifier</a>
                         <a th:href="@{/supprimerEntreprise(id=${e.idEnt}, page=${currentPage}, size=${size})}" 
@@ -69,9 +69,10 @@
 
         </div>
 		
-		<div class="mb-3">
-			<a th:href="@{/showCreate(page=${currentPage}, size=${size})}" class="btn btn-primary mb-3 ml-3">
-			Ajouter Entreprise</a>
+		<div class="mb-3" sec:authorize="hasAnyAuthority('ADMIN','AGENT')">
+		    <a th:href="@{/showCreate(page=${currentPage}, size=${size})}" class="btn btn-primary mb-3 ml-3">
+		        Ajouter Entreprise
+		    </a>
 		</div>
 
     </div>
