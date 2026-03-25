@@ -2,26 +2,18 @@ package com.nadia.entreprises.service;
 
 import java.util.List;
 
-
 import org.springframework.data.domain.Page;
 
-import com.nadia.entreprises.dto.EntreprisesDTO;
 import com.nadia.entreprises.entities.Entreprise;
 import com.nadia.entreprises.entities.Secteur;
 public interface EntrepriseService {
-	EntreprisesDTO saveEntreprise(EntreprisesDTO e);
-	EntreprisesDTO updateEntreprise(EntreprisesDTO e);
-	
-	EntreprisesDTO getEntreprise(Long id);
-	List<EntreprisesDTO> getAllEntreprises();
-	
-	
-	
-
-	Page<Entreprise> getAllEntreprisesParPage(int page,int size);
-	
+	Entreprise saveEntreprise(Entreprise e);
+	Entreprise updateEntreprise(Entreprise e);
 	void deleteEntreprise(Entreprise e);
 	void deleteEntrepriseById(Long id);
+	Entreprise getEntreprise(Long id);
+	List<Entreprise> getAllEntreprises();
+	Page<Entreprise> getAllEntreprisesParPage(int page,int size);
 	
 	List<Entreprise> findByNomEnt(String nom); 
 	List<Entreprise> findByNomEntContains(String nom); 
@@ -32,8 +24,4 @@ public interface EntrepriseService {
 	List<Entreprise> trierEntreprisesNomsChiffre();
 	
 	List<Secteur> getAllSecteur();
-	
-	EntreprisesDTO convertEntityToDto(Entreprise entreprise); 
-	Entreprise convertDtoToEntity(EntreprisesDTO entrepriseDto); 
-
 }

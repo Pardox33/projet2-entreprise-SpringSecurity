@@ -2,8 +2,6 @@ package com.nadia.entreprises.entities;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,8 +23,5 @@ public class Secteur {
 	private String nomSec;
 	
 	@OneToMany(mappedBy = "secteur")
-	@JsonManagedReference
 	private List<Entreprise> entreprises ;
-	
-	
 }

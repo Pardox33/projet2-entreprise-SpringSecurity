@@ -1,17 +1,12 @@
 package com.nadia.entreprises.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.nadia.entreprises.dto.EntreprisesDTO;
 import com.nadia.entreprises.entities.Entreprise;
 import com.nadia.entreprises.entities.Secteur;
 import com.nadia.entreprises.repos.EntrepriseRepository;
@@ -25,17 +20,14 @@ public class EntrepriseServiceImp implements EntrepriseService{
 	@Autowired
 	SecteurRepository secteurRepository;
 	
-	@Autowired 
-	ModelMapper modelMapper; 
-	
 	@Override
-	public EntreprisesDTO saveEntreprise(EntreprisesDTO e) {
-		return convertEntityToDto(entrepriseRepository.save(convertDtoToEntity(e)));
+	public Entreprise saveEntreprise(Entreprise e) {
+		return entrepriseRepository.save(e);
 	}
 
 	@Override
-	public EntreprisesDTO updateEntreprise(EntreprisesDTO e) {
-		return convertEntityToDto(entrepriseRepository.save(convertDtoToEntity(e)));
+	public Entreprise updateEntreprise(Entreprise e) {
+		return entrepriseRepository.save(e);
 	}
 
 	@Override
@@ -49,21 +41,13 @@ public class EntrepriseServiceImp implements EntrepriseService{
 	}
 
 	@Override
-	public EntreprisesDTO getEntreprise(Long id) {
-		return convertEntityToDto(entrepriseRepository.findById(id).get());
+	public Entreprise getEntreprise(Long id) {
+		return entrepriseRepository.findById(id).get();
 	}
 
 	@Override
-	public List<EntreprisesDTO> getAllEntreprises() {
-		return entrepriseRepository.findAll().stream()
-				.map(this::convertEntityToDto)
-				.collect(Collectors.toList());
-				
-		/*List<Entreprise> ents =  entrepriseRepository.findAll(); 
-		List<EntreprisesDTO> listentDto = new ArrayList<>(ents.size()); 
-		for (Entreprise e : ents) 
-		listentDto.add(convertEntityToDto(e)); 
-		return listentDto;*/
+	public List<Entreprise> getAllEntreprises() {
+		return entrepriseRepository.findAll();
 	}
 
 	@Override
@@ -110,52 +94,5 @@ public class EntrepriseServiceImp implements EntrepriseService{
 	public List<Secteur> getAllSecteur() {
 		return secteurRepository.findAll() ;
 	}
-
-	@Override
-	public EntreprisesDTO convertEntityToDto(Entreprise entreprise) {
-		
-		
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-		EntreprisesDTO entrepriseDTO = modelMapper.map(entreprise,EntreprisesDTO.class); 
-		return entrepriseDTO; 
-		}
-	    /*EntreprisesDTO dto = new EntreprisesDTO();
-
-	    dto.setIdEnt(entreprise.getIdEnt());
-	    dto.setNomEnt(entreprise.getNomEnt());
-	    dto.setChiffreAff(entreprise.getChiffreAff());
-	    dto.setDateCre(entreprise.getDateCre());
-	    dto.setEmail(entreprise.getEmail());
-	    dto.setSecteur(entreprise.getSecteur());
-	    //dto.setNomSec(entreprise.getSecteur().getNomSec());
-
-	    return dto;*/
-
-	    /*
-	    return EntreprisesDTO.builder()
-	        .idEnt(entreprise.getIdEnt())
-	        .nomEnt(entreprise.getNomEnt())
-	        .chiffreAff(entreprise.getChiffreAff())
-	        .dateCre(entreprise.getDateCre())
-	        .email(entreprise.getEmail())
-	        .secteur(entreprise.getSecteur())
-	        .build();
-	    */
-
-	@Override 
-	public Entreprise convertDtoToEntity(EntreprisesDTO entrepriseDto) { 
-		Entreprise entreprise = new Entreprise();
-		entreprise = modelMapper.map(entrepriseDto,Entreprise.class);
-		return entreprise;
-	}
-		/*Entreprise entreprise = new Entreprise(); 
-		
-		entreprise.setIdEnt(entrepriseDto.getIdEnt()); 
-		entreprise.setNomEnt(entrepriseDto.getNomEnt()); 
-		entreprise.setChiffreAff(entrepriseDto.getChiffreAff()); 
-		entreprise.setDateCre(entrepriseDto.getDateCre()); 
-		entreprise.setSecteur(entrepriseDto.getSecteur());   
-		return entreprise;  
-	} */
 
 }
